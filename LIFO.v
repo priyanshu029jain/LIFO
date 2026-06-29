@@ -1,9 +1,13 @@
 module LIFO(
-    input clk,reset,
-    input [7:0] data_in,
-    input push, pop,
+    input wire clk,
+    input wire reset,
+    input wire [7:0] data_in,
+    input wire push,
+    input wire pop,
     output reg [7:0] data_out,
-    output empty, full
+    output wire [7:0] peek_data,
+    output wire empty,
+    output wire full
   );
 
   //register bank and pointers
@@ -13,6 +17,7 @@ module LIFO(
   //flag status
   assign empty = (ptr == 5'h00);
   assign full = (ptr == 5'h10);
+  assign peeK_data =  (!empty) ? mem_array[ptr[3:0] - 1'b1] : 8'h00;
 
   //lifo logic
   always @(posedge clk)

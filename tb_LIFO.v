@@ -8,6 +8,7 @@ module tb_LIFO;
   reg [7:0] data_in;
   reg push, pop;
   wire [7:0] data_out;
+  wire [7:0] peek_data;
   wire empty, full;
 
   // Instantiate DUT
@@ -18,6 +19,7 @@ module tb_LIFO;
     .push(push),
     .pop(pop),
     .data_out(data_out),
+    .peek_data(peek_data),
     .empty(empty),
     .full(full)
   );
@@ -33,8 +35,8 @@ module tb_LIFO;
     $dumpvars(0, tb_LIFO);
 
     // Monitor signals
-    $monitor("T=%0t | push=%b pop=%b data_in=%h | data_out=%h | empty=%b full=%b ptr=%0d",
-              $time, push, pop, data_in, data_out, empty, full, uut.ptr);
+    $monitor("T=%0t | push=%b pop=%b data_in=%h | data_out=%h peek=%h | empty=%b full=%b ptr=%0d",
+              $time, push, pop, data_in, data_out, peek_data, empty, full, uut.ptr);
 
     // Initialize
     clk = 0;
@@ -50,12 +52,14 @@ module tb_LIFO;
     for (i = 0; i < 4; i = i + 1) begin
       #10 push = 1; data_in = i + 8'hA0;
       #10 push = 0;
+      #5 $display("Peek after push[%0d] = %h", i, peek_data);
     end
 
     // --- Test Case 2: Pop values back ---
     for (i = 0; i < 4; i = i + 1) begin
       #10 pop = 1;
       #10 pop = 0;
+      #5 $display("Peek after pop[%0d] = %h", i, peek_data);
     end
 
     // --- Test Case 3: Underflow check ---
@@ -73,7 +77,12 @@ module tb_LIFO;
     #10 push = 1; data_in = 8'hFF; // should not push because full=1
     #10 push = 0;
 
-    // --- Test Case 6: Pop all values back ---
+    // --- Test Case 6: Simultaneous push+pop (overwrite top) ---
+    #10 push = 1; pop = 1; data_in = 8'hEE;
+    #10 push = 0; pop = 0;
+    #5 $display("Peek after overwrite = %h", peek_data);
+
+    // --- Test Case 7: Pop all values back ---
     for (i = 0; i < 16; i = i + 1) begin
       #10 pop = 1;
       #10 pop = 0;
