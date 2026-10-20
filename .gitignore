@@ -1,3 +1,7 @@
 *.vvp
 *.vcd
 *.out
+lifo_bmc
+lifo_cover
+lifo_prove
+lifo/

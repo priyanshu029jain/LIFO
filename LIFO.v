@@ -69,4 +69,67 @@ module LIFO(
     end
   end
 
+`ifdef FORMAL
+  // Past valid register
+  reg f_past_valid = 0;
+  always @(posedge clk)
+    f_past_valid <= 1'b1;
+
+  // Power-on reset assumption
+  initial assume(reset);
+
+  // Assertions
+  always @(posedge clk) begin
+    if (!f_past_valid) begin
+      // Step 0: Initial state before first clock edge
+    end else if ($past(reset)) begin
+      // Post-reset state
+      assert (ptr == 5'd0);
+      assert (empty == 1'b1);
+      assert (full == 1'b0);
+      assert (data_out == 8'h00);
+      assert (peek_data == 8'h00);
+    end else begin
+      // Invariant bounds and flag definitions
+      assert (ptr <= 5'd16);
+      assert (empty == (ptr == 5'd0));
+      assert (full  == (ptr == 5'd16));
+      assert (!(empty && full));
+
+      if (empty)
+        assert (peek_data == 8'h00);
+
+      // Push operation
+      if ($past(push) && !$past(pop) && !$past(full))
+        assert (ptr == $past(ptr) + 1'b1);
+
+      // Pop operation
+      if ($past(pop) && !$past(push) && !$past(empty))
+        assert (ptr == $past(ptr) - 1'b1);
+
+      // Overflow protection
+      if ($past(push) && !$past(pop) && $past(full))
+        assert (ptr == 5'd16);
+
+      // Underflow protection
+      if ($past(pop) && !$past(push) && $past(empty))
+        assert (ptr == 5'd0);
+
+      // Simultaneous push & pop
+      if ($past(push) && $past(pop) && !$past(empty) && !$past(full))
+        assert (ptr == $past(ptr));
+    end
+  end
+
+  // Cover properties
+  always @(posedge clk) begin
+    if (f_past_valid && !reset && !$past(reset)) begin
+      cover (full);
+      cover (empty && $past(!empty));
+      cover (push && pop);
+    end
+  end
+`endif
+
 endmodule
+
