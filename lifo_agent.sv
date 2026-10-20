@@ -18,7 +18,7 @@ class lifo_agent;
   lifo_monitor   mon;
 
   // Internal mailbox between Generator and Driver
-  mailbox gen2drv;
+  mailbox #(lifo_transaction) gen2drv;
 
   // Internal handshake event between Driver and Generator
   event drv_done;
@@ -29,7 +29,7 @@ class lifo_agent;
   // -------------------------------------------------------------
   // Constructor
   // -------------------------------------------------------------
-  function new(virtual lifo_if vif, mailbox mon2scb);
+  function new(virtual lifo_if vif, mailbox #(lifo_transaction) mon2scb);
     this.vif     = vif;
     this.gen2drv = new();
 

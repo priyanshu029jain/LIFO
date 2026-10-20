@@ -62,7 +62,7 @@ module tb_top;
     env = new(intf);
 
     // Configure test parameters (number of transactions to verify)
-    env.agt.gen.repeat_count = 40;
+    env.agt.gen.repeat_count = 250;
 
     // Run the full verification flow (pre_test -> test -> post_test)
     env.run();

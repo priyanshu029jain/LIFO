@@ -15,7 +15,7 @@ class lifo_generator;
   lifo_transaction tr;
 
   // Mailbox to transmit transactions to the Driver
-  mailbox gen2drv;
+  mailbox #(lifo_transaction) gen2drv;
 
   // Handshake event: signaled by Driver when it finishes processing a transaction
   event drv_done;
@@ -29,7 +29,7 @@ class lifo_generator;
   // -------------------------------------------------------------
   // Constructor
   // -------------------------------------------------------------
-  function new(mailbox gen2drv, event drv_done);
+  function new(mailbox #(lifo_transaction) gen2drv, event drv_done);
     this.gen2drv      = gen2drv;
     this.drv_done     = drv_done;
     this.repeat_count = 10;

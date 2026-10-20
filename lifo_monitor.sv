@@ -19,12 +19,12 @@ class lifo_monitor;
   virtual lifo_if vif;
 
   // Mailbox to forward sampled transactions to the Scoreboard
-  mailbox mon2scb;
+  mailbox #(lifo_transaction) mon2scb;
 
   // -------------------------------------------------------------
   // Constructor
   // -------------------------------------------------------------
-  function new(virtual lifo_if vif, mailbox mon2scb);
+  function new(virtual lifo_if vif, mailbox #(lifo_transaction) mon2scb);
     this.vif             = vif;
     this.mon2scb         = mon2scb;
     this.no_transactions = 0;

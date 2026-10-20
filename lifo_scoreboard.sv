@@ -12,7 +12,7 @@ class lifo_scoreboard;
   // Class Members
   // -------------------------------------------------------------
   // Mailbox to receive transactions from Monitor
-  mailbox mon2scb;
+  mailbox #(lifo_transaction) mon2scb;
 
   // Golden reference model storage (Depth = 16)
   bit [7:0] ref_stack [15:0];
@@ -26,7 +26,7 @@ class lifo_scoreboard;
   // -------------------------------------------------------------
   // Constructor
   // -------------------------------------------------------------
-  function new(mailbox mon2scb);
+  function new(mailbox #(lifo_transaction) mon2scb);
     this.mon2scb            = mon2scb;
     this.ref_ptr            = 0;
     this.pass_count         = 0;

@@ -19,7 +19,7 @@ class lifo_environment;
   lifo_scoreboard scb;
 
   // Mailbox routing transactions from Monitor to Scoreboard
-  mailbox mon2scb;
+  mailbox #(lifo_transaction) mon2scb;
 
   // Virtual interface handle
   virtual lifo_if vif;

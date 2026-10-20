@@ -12,8 +12,8 @@ class lifo_transaction;
   // Stimulus Fields (Inputs to DUT)
   // -------------------------------------------------------------
   rand bit [7:0] data_in;
-  rand bit       push;
-  rand bit       pop;
+  bit            push;  // set in post_randomize()
+  bit            pop;   // set in post_randomize()
 
   // -------------------------------------------------------------
   // Response Fields (Sampled from DUT by Monitor)
@@ -37,16 +37,17 @@ class lifo_transaction;
   endfunction
 
   // -------------------------------------------------------------
-  // Randomization Method
-  // Provides weighted random stimulus generation:
+  // Post-Randomization Hook (called by built-in randomize())
+  // Selects the operation with weighted random stimulus generation:
   // - 40% Push
   // - 40% Pop
   // - 10% Simultaneous Push & Pop
   // - 10% Idle
+  // Done here rather than with a 'dist' constraint because some
+  // simulators (e.g. Verilator 5.x) do not honour dist weights.
   // -------------------------------------------------------------
-  function int randomize();
+  function void post_randomize();
     int op;
-    data_in = $urandom_range(0, 255);
     op = $urandom_range(0, 9);
     case (op)
       0, 1, 2, 3: begin // Push only
@@ -66,7 +67,6 @@ class lifo_transaction;
         pop  = 1'b0;
       end
     endcase
-    return 1;
   endfunction
 
   // -------------------------------------------------------------

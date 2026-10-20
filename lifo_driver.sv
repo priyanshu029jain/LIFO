@@ -19,7 +19,7 @@ class lifo_driver;
   virtual lifo_if vif;
 
   // Mailbox to receive transactions from the Generator
-  mailbox gen2drv;
+  mailbox #(lifo_transaction) gen2drv;
 
   // Handshake event to signal Generator after completing a drive cycle
   event drv_done;
@@ -27,7 +27,7 @@ class lifo_driver;
   // -------------------------------------------------------------
   // Constructor
   // -------------------------------------------------------------
-  function new(virtual lifo_if vif, mailbox gen2drv, event drv_done);
+  function new(virtual lifo_if vif, mailbox #(lifo_transaction) gen2drv, event drv_done);
     this.vif             = vif;
     this.gen2drv         = gen2drv;
     this.drv_done        = drv_done;
