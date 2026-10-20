@@ -17,7 +17,7 @@ module LIFO(
   //flag status
   assign empty = (ptr == 5'h00);
   assign full = (ptr == 5'h10);
-  assign peeK_data =  (!empty) ? mem_array[ptr[3:0] - 1'b1] : 8'h00;
+  assign peek_data =  (!empty) ? mem_array[ptr[3:0] - 1'b1] : 8'h00;
 
   //lifo logic
   always @(posedge clk)
